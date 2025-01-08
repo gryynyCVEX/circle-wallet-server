@@ -150,6 +150,27 @@ export const transferTokensSchema = yup.object({
     .strict()
 });
 
+export const contractExecutionSchema = yup.object({
+  body: yup
+    .object({
+      walletId: yup.string().required(),
+      idempotencyKey: yup.string().optional(),
+      contractAddress: yup.string().required(),
+      abiFunctionSignature: yup.string().optional(),
+      abiParameters: yup.array().of(yup.mixed()).optional(),
+      callData: yup.string().optional(),
+      amount: yup.string().optional(),
+      feeLevel: yup.string().optional(),
+      gasLimit: yup.string().optional(),
+      gasPrice: yup.string().optional(),
+      maxFee: yup.string().optional(),
+      priorityFee: yup.string().optional(),
+      refId: yup.string().optional()
+    })
+    .noUnknown(true)
+    .strict()
+});
+
 export const validateAddressSchema = yup.object({
   body: yup
     .object({

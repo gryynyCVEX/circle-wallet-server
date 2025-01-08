@@ -109,3 +109,40 @@ export const estimateTransferFee = async (
     next(error);
   }
 };
+
+export const executeContract = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const feeConfig = getFeeConfiguration(req);
+    if (!feeConfig) {
+      throw new Error('Invalid fee configuration');
+    }
+
+    console.log('executeContract', {
+      userToken: req.headers['token'] as string,
+      fee: feeConfig,
+      idempotencyKey: req.body.idempotencyKey,
+      refId: req.body.refId,
+      contractAddress: req.body.contractAddress,
+      walletId: req.body.walletId,
+      callData: req.body.callData,
+    });
+
+    const response = await circleUserSdk.createUserTransactionContractExecutionChallenge({
+      userToken: req.headers['token'] as string,
+      fee: feeConfig,
+      idempotencyKey: req.body.idempotencyKey,
+      refId: req.body.refId,
+      contractAddress: req.body.contractAddress,
+      walletId: req.body.walletId,
+      callData: req.body.callData,
+    });
+    res.status(200).send(response.data);
+  } catch (error: unknown) {
+    // console.log('executeContract error', error);
+    next(error);
+  }
+};

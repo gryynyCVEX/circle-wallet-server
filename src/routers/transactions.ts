@@ -21,6 +21,7 @@ import {
   getTransactionSchema,
   listTransactionsSchema,
   transferTokensSchema,
+  contractExecutionSchema,
   validate,
   validateAddressSchema
 } from '../middleware';
@@ -29,7 +30,8 @@ import {
   estimateTransferFee,
   getTransaction,
   listTransactions,
-  validateAddress
+  validateAddress,
+  executeContract
 } from '../controllers';
 
 const transactions = express.Router();
@@ -178,6 +180,12 @@ transactions.post(
   '/validateAddress',
   validate(validateAddressSchema),
   validateAddress
+);
+
+authTransRouter.post(
+  '/contractExecution',
+  validate(contractExecutionSchema),
+  executeContract
 );
 
 export { transactions, authTransRouter };
